@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bblanchon.PDFium" Version="155.0.8044" />
+    <PackageReference Include="OpenCvSharp5" Version="5.0.0.20260905" />
+    <PackageReference Include="OpenCvSharp5.runtime.win" Version="5.0.0.20260905" />
+	<PackageReference Include="ScottPlot" Version="5.1.58" />
+	<PackageReference Include="System.CommandLine" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>
