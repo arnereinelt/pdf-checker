@@ -161,3 +161,9 @@ The blue curve shows the number of files with at least one crooked page, the red
 - The scan resolution can only be determined for pages that contain image objects
 - Existing report files with the same name are overwritten; if a report file is locked by another program, a message is shown and processing continues
 - The application is designed for internal development/support use
+
+## License
+
+PdfChecker is licensed under the MIT License - see [LICENSE](LICENSE).
+
+Third-party components and their licenses are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
