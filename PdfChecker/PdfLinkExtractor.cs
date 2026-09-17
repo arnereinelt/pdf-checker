@@ -21,28 +21,32 @@ internal static class PdfLinkExtractor
 
     private static void AddAnnotationLinks(IntPtr document, IntPtr page, List<string> links)
     {
-        int position = 0;
+        var position = 0;
         while (PdfiumNative.FPDFLink_Enumerate(page, ref position, out IntPtr linkAnnotation))
         {
-            IntPtr action = PdfiumNative.FPDFLink_GetAction(linkAnnotation);
+            var action = PdfiumNative.FPDFLink_GetAction(linkAnnotation);
             if (action == IntPtr.Zero)
             {
                 continue;
             }
 
-            uint length = PdfiumNative.FPDFAction_GetURIPath(document, action, IntPtr.Zero, 0);
+            var length = PdfiumNative.FPDFAction_GetURIPath(document, action, IntPtr.Zero, 0);
             if (length <= 1)
             {
                 continue;
             }
 
-            IntPtr buffer = Marshal.AllocHGlobal((int)length);
+            var buffer = Marshal.AllocHGlobal((int)length);
             try
             {
-                PdfiumNative.FPDFAction_GetURIPath(document, action, buffer, length);
+                var written = PdfiumNative.FPDFAction_GetURIPath(document, action, buffer, length);
+                if (written <= 1)
+                {
+                    continue;
+                }
 
                 // The returned buffer contains a terminating zero byte.
-                var bytes = new byte[length - 1];
+                var bytes = new byte[written - 1];
                 Marshal.Copy(buffer, bytes, 0, bytes.Length);
                 AddIfWebLink(links, Encoding.UTF8.GetString(bytes));
             }
@@ -55,7 +59,7 @@ internal static class PdfLinkExtractor
 
     private static void AddTextLinks(IntPtr page, List<string> links)
     {
-        IntPtr textPage = PdfiumNative.FPDFText_LoadPage(page);
+        var textPage = PdfiumNative.FPDFText_LoadPage(page);
         if (textPage == IntPtr.Zero)
         {
             return;
@@ -63,7 +67,7 @@ internal static class PdfLinkExtractor
 
         try
         {
-            IntPtr pageLink = PdfiumNative.FPDFLink_LoadWebLinks(textPage);
+            var pageLink = PdfiumNative.FPDFLink_LoadWebLinks(textPage);
             if (pageLink == IntPtr.Zero)
             {
                 return;
@@ -71,22 +75,26 @@ internal static class PdfLinkExtractor
 
             try
             {
-                int count = PdfiumNative.FPDFLink_CountWebLinks(pageLink);
-                for (int i = 0; i < count; i++)
+                var count = PdfiumNative.FPDFLink_CountWebLinks(pageLink);
+                for (var i = 0; i < count; i++)
                 {
-                    int length = PdfiumNative.FPDFLink_GetURL(pageLink, i, IntPtr.Zero, 0);
+                    var length = PdfiumNative.FPDFLink_GetURL(pageLink, i, IntPtr.Zero, 0);
                     if (length <= 1)
                     {
                         continue;
                     }
 
-                    IntPtr buffer = Marshal.AllocHGlobal(length * sizeof(char));
+                    var buffer = Marshal.AllocHGlobal(length * sizeof(char));
                     try
                     {
-                        PdfiumNative.FPDFLink_GetURL(pageLink, i, buffer, length);
+                        var written = PdfiumNative.FPDFLink_GetURL(pageLink, i, buffer, length);
+                        if (written <= 1)
+                        {
+                            continue;
+                        }
 
                         // The returned buffer contains a terminating zero character.
-                        AddIfWebLink(links, Marshal.PtrToStringUni(buffer, length - 1) ?? string.Empty);
+                        AddIfWebLink(links, Marshal.PtrToStringUni(buffer, written - 1) ?? string.Empty);
                     }
                     finally
                     {

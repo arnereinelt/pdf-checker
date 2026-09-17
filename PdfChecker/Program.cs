@@ -133,9 +133,9 @@ internal class Program
                 continue;
             }
 
-            bool fileIsSkewed = false;
-            bool fileHasBrokenLinks = false;
-            bool fileHasProtectedLinks = false;
+            var fileIsSkewed = false;
+            var fileHasBrokenLinks = false;
+            var fileHasProtectedLinks = false;
             foreach (PageSkewResult page in pages)
             {
                 fileIsSkewed |= page.IsSkewed;

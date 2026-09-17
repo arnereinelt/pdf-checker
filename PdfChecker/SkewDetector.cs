@@ -253,7 +253,7 @@ internal static class SkewDetector
         Cv2.Threshold(gray, binary, 0, 255, ThresholdTypes.BinaryInv | ThresholdTypes.Otsu);
 
         // Merge characters of a text line (or bars of a barcode) into single blobs.
-        using Mat kernel = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(25, 3));
+        using var kernel = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(25, 3));
         using var closed = new Mat();
         Cv2.MorphologyEx(binary, closed, MorphTypes.Close, kernel);
 
@@ -307,8 +307,8 @@ internal static class SkewDetector
     {
         values.Sort((a, b) => a.Angle.CompareTo(b.Angle));
 
-        double half = values.Sum(v => v.Weight) / 2.0;
-        double running = 0;
+        var half = values.Sum(v => v.Weight) / 2.0;
+        var running = 0.0;
 
         foreach ((double angle, double weight) in values)
         {
