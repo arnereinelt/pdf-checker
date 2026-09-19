@@ -3,6 +3,8 @@
 ## Description
 `PdfChecker` is a console application that analyzes scanned PDF documents for quality defects. Every page of every PDF in a configurable input directory is rendered and checked for skew (crooked scan), resolution, sharpness and blank pages. The results are written to a CSV report, aggregated per day and visualized as a chart and an HTML report.
 
+![PdfChecker — a .NET 10 command-line tool that scans a directory of PDFs](docs/pdf-checker.jpg)
+
 ## Purpose
 This tool supports scan quality audits by:
 - Locating PDF files in an input directory, filtered by a configurable date range
